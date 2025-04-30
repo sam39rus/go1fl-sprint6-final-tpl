@@ -8,7 +8,7 @@ import (
 )
 
 // Convert автоматически определяет тип строки (текст или код Морзе) и выполняет требуемое преобразование.
-// В случае невозможности интерпретации данных возвращает ошибку.
+// Возвращает ошибку, если данные нельзя корректно преобразовать.
 func Convert(input string) (string, error) {
 	input = strings.TrimSpace(input) // удаляем начальные и финальные пробельные символы
 
@@ -21,21 +21,21 @@ func Convert(input string) (string, error) {
 // isMorseCode проверяет, является ли строка кодом Морзе.
 // Строка признаётся кодом Морзе, если содержит только символы ".", "-", и пробел.
 func isMorseCode(s string) bool {
-	return strings.ContainsOnly(s, ".- ") // проверка, состоят ли символы строки только из разрешенных
+	return strings.IndexAny(s, "^.- ") == -1
 }
 
 // convertFromMorse преобразует строку из кода Морзе в текст.
-// Если не удалось декодировать строку, возвращается ошибка.
+// Возвращает ошибку, если полученный результат пуст.
 func convertFromMorse(morse string) (string, error) {
-	result, err := morsePkg.ToText(morse)
-	if err != nil {
-		return "", errors.New("не удалось расшифровать код Морзе: " + err.Error())
+	result := morsePkg.ToText(morse)
+	if result == "" {
+		return "", errors.New("не удалось расшифровать код Морзе")
 	}
 	return result, nil
 }
 
 // convertToMorse преобразует строку из текста в код Морзе.
-// Пока пакет morse не возвращает ошибок, но мы предусмотрели случай возможного изменения поведения.
+// Возвращает ошибку, если полученный результат пуст.
 func convertToMorse(text string) (string, error) {
 	result := morsePkg.ToMorse(text)
 	if result == "" {
