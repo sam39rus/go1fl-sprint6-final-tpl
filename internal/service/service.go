@@ -21,7 +21,7 @@ func Convert(input string) (string, error) {
 // isMorseCode проверяет, является ли строка кодом Морзе.
 // Строка признаётся кодом Морзе, если содержит только символы ".", "-", и пробел.
 func isMorseCode(s string) bool {
-	return strings.IndexAny(s, "^.- ") == -1
+	return !strings.ContainsAny(s, "^.- ")
 }
 
 // convertFromMorse преобразует строку из кода Морзе в текст.
