@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"net/http"
@@ -38,8 +39,9 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Читаем файл напрямую без буферизации
-	data, err := io.ReadAll(file)
+	// Чтение файла
+	buf := bufio.NewReader(file)
+	data, err := io.ReadAll(buf)
 	if err != nil {
 		http.Error(w, "Ошибка при чтении файла.", http.StatusInternalServerError)
 		return
@@ -57,7 +59,14 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	filename := now.Format("20060102_150405") + filepath.Ext(header.Filename)
 	outputPath := "./uploads/" + filename
 
-	// Создаем и открываем выходной файл
+	// Создаем директорию ./uploads/, если её нет
+	err = os.MkdirAll("./uploads/", 0755)
+	if err != nil {
+		http.Error(w, "Ошибка при создании директории.", http.StatusInternalServerError)
+		return
+	}
+
+	// Открываем и записываем файл
 	fout, err := os.Create(outputPath)
 	if err != nil {
 		http.Error(w, "Ошибка при создании выходного файла.", http.StatusInternalServerError)
