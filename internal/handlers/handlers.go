@@ -80,7 +80,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Формируем ответ пользователю
-	response := fmt.Sprintf("Данные успешно обработаны.\nИсходный файл: %s\nРезультат: %s\nКонвертированные данные сохранены в: %s", header.Filename, convertedData, outputPath)
+	response := fmt.Sprintf("Данные успешно обработаны.\nИсходный файл: %s\nИсходные данные: %s\nРезультат: %s\nКонвертированные данные сохранены в: %s", header.Filename, string(data), convertedData, outputPath)
 
 	fmt.Fprintln(w, response)
 }
