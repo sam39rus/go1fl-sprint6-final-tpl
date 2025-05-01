@@ -3,13 +3,12 @@ package handlers
 import (
 	"bufio"
 	"fmt"
+	servicePkg "go1fl-sprint6-final-tpl/internal/service"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
-
-	servicePkg "go1fl-sprint6-final-tpl/internal/service"
 )
 
 // ServeIndexPage отправляет HTML-файл index.html на корень сайта (/).
@@ -81,8 +80,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Формируем ответ пользователю
-	response := fmt.Sprintf("Данные успешно обработаны.\nИсходный файл: %s\nКонвертированные данные сохранены в: %s",
-		header.Filename, outputPath)
+	response := fmt.Sprintf("Данные успешно обработаны.\nИсходный файл: %s\nРезультат: %s\nКонвертированные данные сохранены в: %s", header.Filename, convertedData, outputPath)
 
 	fmt.Fprintln(w, response)
 }
